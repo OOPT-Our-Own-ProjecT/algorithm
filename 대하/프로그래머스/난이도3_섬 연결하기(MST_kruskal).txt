@@ -1,0 +1,89 @@
+//최소 신장 트리(MST) => Kruskal Algirthm 활용 => 간선 선택 하여 풀기 => 사이클이 생기지 않도록 사이클 검사 필요
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+bool compare(vector<int> a, vector<int> b){
+    
+    return a[2] < b[2];
+}
+
+//인수로 넘긴 정점의 부모 정점을 찾음
+int getRoot(vector<int>& parent, int a){
+    
+    if(parent[a] == a){
+        
+        return a;
+        
+    }
+    else{
+        
+        return parent[a] = getRoot(parent, parent[a]);
+    }
+    
+}
+
+//두 정점이 같은 부모를 가지는지 확인
+bool find(vector<int>& parent, int a, int b){
+    
+    a = getRoot(parent, a);
+    b = getRoot(parent, b);
+    
+    //같은 부모를 가짐, a와 b를 잇는 간선이 생기면 사이클이 생김
+    if(a == b)
+        return true;
+    else
+        return false;
+}
+
+//두 정점을 부모가 같은 그룹으로 합침
+void unionParent(vector<int>& parent, int a, int b){
+    
+    a = getRoot(parent, a);
+    b = getRoot(parent, b);
+    
+    if(a < b){
+        
+        parent[b] = a;
+        
+    }
+    else{
+        
+        parent[a] = b;
+    }
+    
+}
+
+int solution(int n, vector<vector<int>> costs) {
+    int answer = 0;
+    
+    //비용으로 간선 오름차순 정렬
+    sort(costs.begin(), costs.end(), compare);
+    
+    //정점의 부모 생성
+    vector<int> parents(n);
+    
+    //초기 정점의 부모는 자기 자신
+    for(int i = 0; i < n; i++){
+        
+        parents[i] = i;
+        
+    }
+    
+    for(int i = 0; i < costs.size(); i++){
+        
+        //두 정점의 부모가 다르면
+        if(!find(parents, costs[i][0], costs[i][1])){
+            
+            //하나로 합침
+            unionParent(parents, costs[i][0], costs[i][1]);
+            answer += costs[i][2];
+            
+        }
+        
+    }
+    
+    return answer;
+}

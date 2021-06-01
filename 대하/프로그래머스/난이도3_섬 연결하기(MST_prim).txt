@@ -1,0 +1,67 @@
+//최소 신장 트리(MST) => Prim Algirthm 활용 => 정점 선택 하여 풀기 => 이미 선택된 정점들의 인접 정점 중에 아직 연결되지 않은 정점들을 잇는 간선 중 최소 간선을 가지는 정점을 포함시키는 과정
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(int n, vector<vector<int>> costs) {
+    int answer = 0;
+    
+    vector<vector<int>> graph(n, vector<int>(n));
+    
+    //그래프로 표현
+    for(int i = 0; i < costs.size(); i++){
+        
+        graph[costs[i][0]][costs[i][1]] = costs[i][2];
+        graph[costs[i][1]][costs[i][0]] = costs[i][2];
+        
+    }
+    
+    //방문한 정점과 방문하지 않은 정점 구분
+    vector<int> visited;
+    vector<int> unvisited;
+    
+    //0 정점부터 시작
+    visited.push_back(0);
+    
+    //나머지는 아직 방문하지 않음
+    for(int i = 1; i < n; i++){
+        
+        unvisited.push_back(i);
+        
+    }
+    
+    //첫번째 for문 현재 i개의 정점을 방문했음
+    for(int i = 1; i < n; i++){
+        
+        int min = 987654321;
+        int min_idx = 0;
+        
+        //i개의 방문 정점에서 확인
+        for(int j = 0; j < i; j++)
+        {
+            //아직 방문하지 않은 정점의 개수는 n - i개
+            for(int k = 0; k < n - i; k++){
+                
+                //방문했던 점과 방문하지 않은 점들을 잇는 간선 중 가중치가 최소가 되는 값을 찾음
+                if(graph[visited[j]][unvisited[k]] > 0 && graph[visited[j]][unvisited[k]] < min){
+                    
+                    min = graph[visited[j]][unvisited[k]];
+                    min_idx = k;
+                    
+                }
+                
+            }
+            
+        }
+        
+        //가중치가 최소가 되는 정점을 방문 체크
+        visited.push_back(unvisited[min_idx]);
+        //방문하지 않은 정점에서 제거
+        unvisited.erase(unvisited.begin() + min_idx);
+        answer += min;
+        
+    }
+    
+    return answer;
+}
