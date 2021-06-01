@@ -1,0 +1,44 @@
+import java.io.*;
+import java.util.*;
+
+class Solution {
+    public int solution(int n, int[][] costs) {
+        int answer = 0;
+        
+        int[][] map = new int[n][n];
+        boolean [] visited = new boolean[n];
+        
+        for(int i=0; i<n; i++){
+            for(int j=0; j<n; j++){
+                map[i][j] = Integer.MAX_VALUE;
+            }//end for1.
+        }//end for2.
+        
+        for(int[] cost : costs){
+            int v1 = cost[0];
+            int v2 = cost[1];
+            int c = cost[2];
+            map[v1][v2] = c;
+            map[v2][v1] = c;
+        }//end for.
+        
+        visited[0] = true;
+        for(int test=0; test<n-1; test++){
+            int min = Integer.MAX_VALUE;
+            int idx = 0;
+            for(int i=0; i<n; i++){
+                if(!visited[i] && map[0][i] < min){
+                    idx = i;
+                    min = map[0][i];
+                }
+            }//end for1.
+            answer += min;
+            visited[idx] = true;
+            for(int i=0; i<n; i++){
+                if(map[0][i] > map[idx][i]) map[0][i] = map[idx][i];
+            }//end for1.
+        }//end for2.
+        
+        return answer;
+    }//end main.
+}//end class.
