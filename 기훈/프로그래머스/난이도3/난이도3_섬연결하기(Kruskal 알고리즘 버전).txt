@@ -1,0 +1,61 @@
+import java.io.*;
+import java.util.*;
+
+class Solution {
+    class Pos implements Comparable<Pos>{
+        int v1;
+        int v2;
+        int cost;
+        public Pos(int v1, int v2, int cost){
+            this.v1 = v1;
+            this.v2 = v2;
+            this.cost = cost;
+        }//Public Pos.
+        
+        @Override
+        public int compareTo(Pos p){
+            return this.cost - p.cost;
+        }//compareTo.
+    }//Class Pos.
+    
+    static int[] parent;
+    
+    public int solution(int n, int[][] costs) {
+        int answer = 0;
+        parent = new int[n];
+        
+        for(int i=0; i<n; i++){
+            parent[i] = i;
+        }//initialize parent.
+        
+        PriorityQueue<Pos> pq = new PriorityQueue<Pos>();
+        for(int[] cost: costs){
+            Pos p = new Pos(cost[0],cost[1],cost[2]);
+            pq.offer(p);
+        }//end for.
+        
+        int time = 0;
+        while(!pq.isEmpty()){
+            Pos p = pq.poll();
+            int p_v1 = find(p.v1);
+            int p_v2 = find(p.v2);
+            if(p_v1 == p_v2) continue;
+            union(p_v1 , p_v2);
+            time++;
+            answer += p.cost;
+            if(time == n-1) break;
+        }//end while.
+        return answer;
+    }//end main.
+    
+    private int find(int x){
+        if(parent[x] == x) return x;
+        return find(parent[x]);
+    }//end find.
+    
+    private void union(int v1, int v2){
+        parent[v1] = v2;
+    }//end union.
+    
+    
+}//end class.
