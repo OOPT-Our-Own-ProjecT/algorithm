@@ -1,0 +1,45 @@
+import java.util.*;
+
+class Solution {
+    static String[] user_list;
+    static String[] banned_list;
+    static boolean[] selected;
+    static HashMap<Integer,Boolean> map = new HashMap<Integer,Boolean>();
+    static int answer = 0;
+    
+    public int solution(String[] user_id, String[] banned_id) {
+        user_list = user_id;
+        banned_list = banned_id;
+        selected = new boolean[user_list.length];
+        solve(0,0);
+        return answer;
+    }//end main.
+    
+    private void solve(int now, int idx){
+        if(idx == banned_list.length){
+            if(!map.containsKey(now)) {
+                answer++;
+                map.put(now, true);
+            }
+            return;
+        }
+        String tmp = banned_list[idx];
+        for(int i=0; i<user_list.length; i++){
+            if(selected[i] || tmp.length() != user_list[i].length()) continue;
+            boolean flag = true;
+            for(int j=0; j<user_list[i].length(); j++){
+                if(tmp.charAt(j) != '*' && user_list[i].charAt(j) != tmp.charAt(j)){
+                    flag = false;
+                    break;
+                }
+            }//end for2.
+            if(flag){
+                int bit = (int)Math.pow(2,i);
+                selected[i] = true;
+                solve(now+bit,idx+1);
+                selected[i] = false;
+            }
+        }//end for1.
+    }//end solve.
+        
+}//end solution.
