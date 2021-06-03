@@ -1,0 +1,87 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+vector<string> possible_list; //불량 사용자 아이디 목록이 가능한 경우
+vector<vector<int>> possible_id; //banned_id마다 가능한 user_id 저장
+
+//불량 사용자 아이디 목록 조합 뽑기
+void make_list(string s, int idx){
+    
+    if(s.length() == possible_id.size()){
+       
+        sort(s.begin(), s.end());
+        possible_list.push_back(s);
+        
+        return;
+    }
+    else{
+        
+        for(int j = 0; j < possible_id[idx].size(); j++){
+
+            //banned_id의 원소들이 중복되는 경우 제외
+            if(s.find(to_string(possible_id[idx][j])) == string::npos){
+
+                make_list(s + to_string(possible_id[idx][j]), idx + 1);
+
+            }
+            
+        }
+
+    }
+    
+}
+
+int solution(vector<string> user_id, vector<string> banned_id) {
+    int answer = 0;
+        
+    for(int i = 0; i < banned_id.size(); i++){
+        
+        string ban = banned_id[i];
+        
+        vector<int> temp;
+        
+        //불량 사용자로 판별할 수 있는 경우
+        for(int j = 0; j < user_id.size(); j++){
+            
+            if(ban.length() == user_id[j].length()){
+                
+                bool flag = true;
+                
+                for(int k = 0; k < ban.length(); k++){
+                    
+                    if(ban[k] != '*' && ban[k] != user_id[j][k]){
+                        
+                        flag = false;
+                        break;
+                        
+                    }
+                    
+                }
+                
+                if(flag){
+                    
+                    temp.push_back(j);
+                    
+                }
+                
+            }
+            
+        }
+        
+        possible_id.push_back(temp);
+        
+    }
+    
+    make_list("", 0);
+    
+    //제재 아이디 목록 중복 제거
+    sort(possible_list.begin(), possible_list.end());
+    possible_list.erase(unique(possible_list.begin(), possible_list.end()), possible_list.end());
+    
+    answer = possible_list.size();
+    
+    return answer;
+}
