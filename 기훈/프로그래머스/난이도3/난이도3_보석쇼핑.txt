@@ -1,0 +1,50 @@
+import java.util.*;
+class Solution {
+    static boolean[] selected;
+    public int[] solution(String[] gems) {
+        HashMap<String,Integer> map_idx = new HashMap<String,Integer>();
+        HashMap<String,Integer> map_cnt = new HashMap<String,Integer>();
+        int total = 0;
+        for(String gem : gems){
+            if(!map_idx.containsKey(gem)){
+                map_idx.put(gem,total);
+                map_cnt.put(gem,0);
+                total++;
+            }
+        }//end for.
+        selected = new boolean[total];
+        int left = 0;
+        int min = Integer.MAX_VALUE;
+        int[] answer = new int[2];
+        
+        for(int i=0; i<gems.length; i++){
+            String gem = gems[i];
+            selected[map_idx.get(gem)] = true;
+            map_cnt.put(gem, map_cnt.get(gem)+1);
+            if(gem.equals(gems[left])){
+                while(left<=i){
+                    if(map_cnt.get(gems[left]) > 1){
+                        map_cnt.put(gems[left] , map_cnt.get(gems[left])-1);
+                        left++;
+                    }
+                    else break;
+                }
+            }
+            if(all_selected()){
+                if(i-left < min){
+                    answer[0] = left+1;
+                    answer[1] = i+1;
+                    min = i-left;
+                }
+            }
+        }//end for.
+        
+        return answer;
+    }//end main.
+    private boolean all_selected(){
+        for(int i=0; i<selected.length; i++){
+            if(!selected[i]) return false;
+        }
+        return true;
+    }//end all_selected.
+}//end solution.
