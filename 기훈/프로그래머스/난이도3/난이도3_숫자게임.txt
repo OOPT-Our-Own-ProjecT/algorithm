@@ -1,0 +1,21 @@
+import java.util.*;
+class Solution {
+    public int solution(int[] A, int[] B) {
+        Arrays.sort(A);
+        Arrays.sort(B);
+        int answer = 0;
+        int idx = 0;
+        for(int enemy : A){
+            while(idx<B.length){
+                if(B[idx]>enemy){
+                    answer++;
+                    idx++;
+                    break;
+                }
+                idx++;
+            }//end while.
+            if(idx==B.length) break;
+        }//end for.
+        return answer;
+    }//end Main.
+}//end Solution.
