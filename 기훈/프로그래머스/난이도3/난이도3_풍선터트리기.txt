@@ -1,0 +1,24 @@
+class Solution {
+    public int solution(int[] a) {
+        //로직 : 어떤 배열의 끝 점은 무조건 남을 수 있다.(기회1번을 사용하면)
+        //로직 : 그렇기에 현재의 끝 값에서 +1 , -1 인 값들이 현재 끝 값을 갱신할 수 있는 숫자면 그 숫자도 뽑을 수 있는 숫자다.
+        int answer =2; //현재 배열의 끝 값은 정답에 무조건 들어간다.
+        int left = 0;
+        int right = a.length-1;
+        for(int i=0; i<a.length; i++){
+            if(a[left] > a[i]){
+                answer++;
+                left = i;
+            }//왼쪽 끝 값을 갱신할 수 있는 경우.
+            if(a[right] > a[a.length-(i+1)]){
+                answer++;
+                right = a.length-(i+1);
+            }//오른쪽 끝 값을 갱신할 수 있는 경우.
+            if(left==right){
+                answer--;
+                break;
+            }//가장 최솟값이 중복되서 answer에 들어갔으니 1값 빼주고 이다음 로직을 돌릴 필요가 없다.
+        }//end for.
+        return answer;
+    }//end main.
+}//end solution.
