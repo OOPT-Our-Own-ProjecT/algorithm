@@ -1,0 +1,16 @@
+class Solution {
+    static int P = 1000000007;
+    public int solution(int n, int[] money) {
+        int[] dp = new int[n+1];
+        for(int i=0; i<=n; i+=money[0]){
+            dp[i] = 1; //0부터 하는 이유 ==> 초기값 설정으로 나중에 다른 코인들로 dp 채울때 필요.
+        }
+        for(int i=1; i<money.length; i++){
+            int coin = money[i];
+            for(int j=coin; j<=n; j++){
+                dp[j] = (dp[j] + dp[j-coin]) % P;
+            }//end for2.
+        }//end for1.
+        return dp[n];
+    }//end main.
+}//end class.
