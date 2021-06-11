@@ -1,0 +1,33 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int solution(string s)
+{
+    int answer = 1;
+
+    //stack 이용한 풀이 => 마지막에 입력된 값과 새로 들어오는 값이 같으면 마지막 입력된 값 지우기, 아니면 새로 넣기
+    string temp = "";
+    
+    for(int i = 0; i < s.length(); i++){
+        
+        if(temp != "" && temp[temp.length() - 1] == s[i]){
+            
+            temp.pop_back();
+            
+            continue;
+            
+        }
+        
+        temp += s[i];
+    }
+    
+    if(temp != ""){
+        
+        return 0;
+        
+    }
+
+    return answer;
+}
