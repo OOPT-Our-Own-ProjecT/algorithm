@@ -1,0 +1,41 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+int dp[100001];
+
+int solution(int n, vector<int> money) {
+    int answer = 0;
+    
+    //0원 거슬러 주는 경우는 1
+    dp[0] = 1;
+    
+    sort(money.begin(), money.end());
+    
+    //가장 작은 단위로 나눠지는 거스름동 경우 
+    for(int i = money[0]; i <= n; i += money[0]){
+        
+        dp[i]++;
+        
+    }
+    
+    for(int i = 1; i < money.size(); i++){
+        
+        for(int j = 1; j <= n; j++){
+         
+            if(j - money[i] >= 0){
+
+                dp[j] += (dp[j - money[i]] % 1000000007);
+
+            }
+            
+        }
+        
+    }
+    
+    answer = dp[n];
+    
+    return answer;
+}
