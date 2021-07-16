@@ -1,0 +1,272 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int zero_cnt = 0;
+int one_cnt = 0;
+
+void quad(vector<vector<int>> arr){
+    
+    if(arr.size() == 2){
+        
+        int c = arr[0][0];
+        bool flag = true;
+        
+        for(int i = 0; i < arr.size(); i++){
+
+            for(int j = 0; j < arr[i].size(); j++){
+
+                if(c != arr[i][j]){
+
+                    flag = false;
+
+                }
+
+            }
+
+        }
+
+        if(flag){
+
+            if(c == 0){
+
+                zero_cnt = zero_cnt - 3;
+
+            }
+            else{
+
+                one_cnt = one_cnt - 3;
+
+            }
+
+        }
+        
+        return;
+    }
+    else{
+        
+        vector<vector<int>> blank;
+
+        //1번 구간
+        int check = arr[0][0];
+        bool flag = true;
+        vector<vector<int>> temp = blank;
+
+        for(int i = 0; i < arr.size() / 2; i++){
+
+            vector<int> t;
+
+            for(int j = 0; j < arr[i].size() / 2; j++){
+
+                if(check != arr[i][j]){
+
+                    flag = false;
+
+                }
+
+                t.push_back(arr[i][j]);
+
+            }
+
+            temp.push_back(t);
+        }
+
+        if(flag){
+
+            if(check == 0){
+
+                zero_cnt = zero_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+            else{
+
+                one_cnt = one_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+
+        }
+        else{
+
+            quad(temp);
+
+        }
+
+        //2번 구간
+        check = arr[arr.size() / 2][0];
+        flag = true;
+        temp = blank;
+
+        for(int i = arr.size() / 2; i < arr.size(); i++){
+
+            vector<int> t;
+
+            for(int j = 0; j < arr[i].size() / 2; j++){
+
+                if(check != arr[i][j]){
+
+                    flag = false;
+
+                }
+
+                t.push_back(arr[i][j]);
+
+            }
+
+            temp.push_back(t);
+        }
+
+        if(flag){
+
+            if(check == 0){
+
+                zero_cnt = zero_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+            else{
+
+                one_cnt = one_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+
+        }
+        else{
+
+            quad(temp);
+
+        }
+
+        //3번 구간
+        check = arr[0][arr.size() / 2];
+        flag = true;
+        temp = blank;
+
+        for(int i = 0; i < arr.size() / 2; i++){
+
+            vector<int> t;
+
+            for(int j = arr.size() / 2; j < arr[i].size(); j++){
+
+                if(check != arr[i][j]){
+
+                    flag = false;
+
+                }
+
+                t.push_back(arr[i][j]);
+
+            }
+
+            temp.push_back(t);
+        }
+
+        if(flag){
+
+            if(check == 0){
+
+                zero_cnt = zero_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+            else{
+
+                one_cnt = one_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+
+        }
+        else{
+
+            quad(temp);
+
+        }
+
+        //4번 구간
+        check = arr[arr.size() / 2][arr.size() / 2];
+        flag = true;
+        temp = blank;
+
+        for(int i = arr.size() / 2; i < arr.size(); i++){
+
+            vector<int> t;
+
+            for(int j = arr.size() / 2; j < arr[i].size(); j++){
+
+                if(check != arr[i][j]){
+
+                    flag = false;
+
+                }
+
+                t.push_back(arr[i][j]);
+
+            }
+
+            temp.push_back(t);
+        }
+
+        if(flag){
+
+            if(check == 0){
+
+                zero_cnt = zero_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+            else{
+
+                one_cnt = one_cnt - ((arr.size() / 2) * (arr.size() / 2)) + 1;
+
+            }
+
+        }
+        else{
+
+            quad(temp);
+
+        }
+
+    }
+
+}
+
+vector<int> solution(vector<vector<int>> arr) {
+    vector<int> answer;
+    
+    for(int i = 0; i < arr.size(); i++){
+        for(int j = 0; j < arr[i].size(); j++){
+            
+            if(arr[i][j] == 1){
+                
+                one_cnt++;
+                
+            }
+            else{
+                
+                zero_cnt++;
+                
+            }
+            
+        }
+    
+    }
+    
+    if(zero_cnt == 0){
+
+        one_cnt = 1;
+        
+    }
+    else if(one_cnt == 0){
+        
+        zero_cnt = 1;
+        
+    }
+    else{
+        
+        quad(arr);
+    
+    }
+    
+    answer.push_back(zero_cnt);
+    answer.push_back(one_cnt);
+    
+    return answer;
+}
