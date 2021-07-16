@@ -1,0 +1,121 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+vector<string> c;
+string origin;
+
+//후보키의 후보 길이순으로 비교 정렬
+bool cmp(string a, string b){
+    
+    if(a.length() < b.length()){
+        
+        return true;
+    }
+    
+    return false;
+}
+
+//후보키의 모든 조합 만들기
+void combi(string s, int idx){
+    
+    if(s != ""){
+
+        c.push_back(s);
+        
+    }
+    
+    for(int i = idx + 1; i < origin.length(); i++){
+
+        combi(s + origin[i], i);
+
+    }
+    
+    return;
+}
+
+int solution(vector<vector<string>> relation) {
+    int answer = 0;
+    vector<string> ans;
+    
+    for(int i = 0; i < relation[0].size(); i++){
+        
+        origin += to_string(i);
+        
+    }
+    
+    combi("", -1);
+    
+    sort(c.begin(), c.end(), cmp);
+    c.erase(unique(c.begin(), c.end()), c.end());
+    
+    for(int i = 0; i < c.size(); i++){
+        
+        vector<vector<string>> temp;
+        
+        for(int j = 0; j < relation.size(); j++){
+            
+            vector<string> t;
+            
+            for(int k = 0; k < c[i].length(); k++){
+                
+                t.push_back(relation[j][c[i][k] - '0']);
+                
+            }
+            
+            temp.push_back(t);
+            
+        }
+        
+        int origin_size = temp.size();
+
+        sort(temp.begin(), temp.end());
+        temp.erase(unique(temp.begin(), temp.end()), temp.end());
+        
+        //유일성 확인
+        if(temp.size() == origin_size){
+            
+            bool flag = true;
+            
+            //최소성 확인
+            for(int a = 0; a < ans.size(); a++){
+
+                int cnt = 0;
+                
+                for(int b = 0; b < ans[a].length(); b++){
+
+                    if(c[i].find(ans[a][b]) != string::npos){
+                    
+                        cnt++;
+
+                    }
+
+                }
+                
+                if(cnt == ans[a].length()){
+                    
+                    flag = false;
+                    break;
+                    
+                }
+                
+            }
+            
+            //유일성, 최소성 둘 다 만족하면 정답
+            if(flag){
+                
+                ans.push_back(c[i]);
+                
+            }
+            
+        }
+        
+    }
+    
+    answer = ans.size();
+    
+    return answer;
+}
