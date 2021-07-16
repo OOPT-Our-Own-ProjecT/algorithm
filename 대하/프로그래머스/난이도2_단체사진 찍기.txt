@@ -1,0 +1,65 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+
+using namespace std;
+
+// 전역 변수를 정의할 경우 함수 내에 초기화 코드를 꼭 작성해주세요.
+int solution(int n, vector<string> data) {
+    int answer = 0;
+    
+    string friends = "ACFJMNRT";
+    
+    do{
+        
+        bool flag = true;
+
+        for(int idx = 0; idx < data.size(); idx++){
+            
+            int dist = friends.find(data[idx][0]) - friends.find(data[idx][2]);
+            dist = abs(dist) - 1;
+            char c = data[idx][3];
+            int n = data[idx][4] - '0';
+            
+            if(c == '='){
+
+                if(dist != n){
+
+                    flag = false;
+                    break;
+                    
+                }
+
+            }
+            else if(c == '>'){
+
+                if(dist <= n){
+
+                    flag = false;
+                    break;
+                    
+                }
+
+            }
+            else if(c == '<'){
+
+                if(dist >= n){
+
+                    flag = false;
+                    break;
+                    
+                }
+
+            }
+        }
+        
+        if(flag){
+            
+            answer++;
+            
+        }
+        
+    }while(next_permutation(friends.begin(), friends.end()));
+    
+    return answer;
+}
