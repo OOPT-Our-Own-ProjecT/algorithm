@@ -1,0 +1,51 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<int> solution(string s) {
+    vector<int> answer;
+    
+    int change_cnt = 0;
+    int zero_cnt = 0;
+    
+    while(s.length() > 1){
+    
+        //0제거
+        string temp = "";
+        
+        for(int i = 0; i < s.length(); i++){
+            
+            if(s[i] == '0'){
+                
+                zero_cnt++;
+                continue;
+                
+            }
+            
+            temp += s[i];
+            
+        }
+        
+        //0 제거 후 길이
+        int n = temp.length();
+        
+        s = "";
+        
+        //길이를 2진법으로 변경
+        while(n > 0){
+            
+            s = to_string(n % 2) + s;
+            n = n / 2;
+            
+        }
+        
+        change_cnt++;
+        
+    }
+    
+    answer.push_back(change_cnt);
+    answer.push_back(zero_cnt);
+    
+    return answer;
+}
