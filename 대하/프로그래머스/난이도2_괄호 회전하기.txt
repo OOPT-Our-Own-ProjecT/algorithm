@@ -1,0 +1,57 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+int solution(string s) {
+    int answer = 0;
+    
+    //문자열의 길이가 짝수여야 올바른 괄호 문자열이 될 수 있음
+    if(s.length() % 2 == 0){
+    
+        //왼쪽으로 i칸만큼 회전 후 올바른 괄호 문자열인지 확인
+        for(int i = 0; i < s.length(); i++){
+        
+            string temp = s;
+            string t = temp;
+
+            while(1){
+
+                for(int j = 0; j < temp.length() - 1; j++){
+
+                    //내부의 올바른 괄호 문자열을 찾고 제거
+                    if((temp[j] == '{' && temp[j + 1] == '}') || (temp[j] == '[' && temp[j + 1] == ']') || (temp[j] == '(' && temp[j + 1] == ')')){
+
+                        t = temp.substr(0, j) + temp.substr(j + 2, temp.length());
+                        break;
+
+                    }
+
+                }
+
+                //괄호가 모두 제거가 되면 올바른 문자열
+                if(t == ""){
+
+                    answer++;
+                    break;
+
+                }
+                //변화가 없으면 올바른 괄호 문자열이 아님
+                else if(t == temp){
+
+                    break;
+                }
+
+                temp = t;
+
+            }
+
+            //왼쪽으로 회전
+            s = s.substr(1, s.length()) + s[0];
+
+        }
+        
+    }
+    
+    return answer;
+}
