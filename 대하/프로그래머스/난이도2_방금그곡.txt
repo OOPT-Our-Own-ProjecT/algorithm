@@ -1,0 +1,160 @@
+#include <string>
+#include <vector>
+#include <algorithm>
+#include <iostream>
+
+using namespace std;
+
+struct musics{
+  
+    int t; //재생 시간
+    int idx; //음악 순서
+    string music; //제목
+    string meldoy; //악보
+    
+};
+
+//재생 시간 구하기
+int running_T(string s, string e){
+    
+    int t;
+    
+    int sh = (s[0] - '0') * 10 + (s[1] - '0');
+    int sm = (s[3] - '0') * 10 + (s[4] - '0');
+    int eh = (e[0] - '0') * 10 + (e[1] - '0');
+    int em = (e[3] - '0') * 10 + (e[4] - '0');
+    
+    t = (eh - sh) * 60 + (em - sm);
+    
+    return t;
+}
+
+//반올림 바꾸기
+string change_m(string melody){
+    
+    while(melody.find("C#") != string::npos){
+        
+        melody.replace(melody.find("C#"), 2, "Z");
+
+    }
+
+    while(melody.find("D#") != string::npos){
+
+        melody.replace(melody.find("D#"), 2, "Y");
+
+    }
+
+    while(melody.find("F#") != string::npos){
+
+        melody.replace(melody.find("F#"), 2, "X");
+
+    }
+
+    while(melody.find("G#") != string::npos){
+
+        melody.replace(melody.find("G#"), 2, "W");
+
+    }
+
+    while(melody.find("A#") != string::npos){
+
+        melody.replace(melody.find("A#"), 2, "V");
+
+    }
+    
+    return melody;
+}
+
+//정렬 기준
+bool cmp(musics &a, musics &b){
+    
+    if(a.t > b.t){
+        
+        return a.t > b.t;
+    }
+    else if(a.t == b.t){
+        
+        
+        return a.idx < b.idx;
+    }
+    
+}
+
+string solution(string m, vector<string> musicinfos) {
+    string answer = "";
+    vector<musics> ans;
+    m = change_m(m);
+    musics music[100];
+    
+    //시간 처리
+    for(int i = 0; i < musicinfos.size(); i++){
+        
+        string start = musicinfos[i].substr(0, 5);
+        string end = musicinfos[i].substr(6, 5);
+        string name = "";
+        string melody = "";
+        string temp = "";
+        int t = running_T(start, end);
+
+        for(int j = 12; j <= musicinfos[i].length(); j++){
+            
+            if(musicinfos[i][j] == ','){
+                
+                name = temp;
+                temp = "";
+                
+            }
+            else if(musicinfos[i][j] == '\0'){
+                
+                melody = temp;
+                
+            }
+            else{
+                
+                temp += musicinfos[i][j];
+                
+            }
+            
+        }
+        
+        melody = change_m(melody);
+        
+        string full_m = "";
+        
+        //전체 재생된 음악
+        for(int b = 0; b < t; b++){
+            
+            full_m += melody[b % melody.length()];
+            
+        }
+        
+        //기억한 멜로디가 있는가
+        if(full_m.find(m) != string::npos){
+            
+            ans.push_back({t, i, name});
+            
+        }
+        
+    }
+    
+    //조건에 일치하는 음악이 여러개일 때
+    if(ans.size() > 1){
+
+        sort(ans.begin(), ans.end(), cmp);
+
+    }
+    
+    //조건에 일치하는 음악이 없을 때
+    if(ans.size() < 1){
+        
+        answer = "(None)";
+        
+    }
+    else{
+
+        answer = ans[0].music;
+
+    }
+    
+    return answer;
+}
