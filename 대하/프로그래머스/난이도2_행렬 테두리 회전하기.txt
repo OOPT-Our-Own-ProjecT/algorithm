@@ -1,0 +1,121 @@
+#include <string>
+#include <vector>
+
+using namespace std;
+
+vector<int> solution(int rows, int columns, vector<vector<int>> queries) {
+    vector<int> answer;
+    
+    vector<vector<int>> matrix(rows + 1, vector<int>(columns + 1, 0));
+    
+    int num = 1;
+    
+    for(int i = 1; i <= rows; i++){
+        for(int j = 1; j <= columns; j++){
+        
+            matrix[i][j] = num;
+            num++;
+            
+        }
+    }
+    
+    //쿼리별 회전 실행
+    for(int i = 0; i < queries.size(); i++){
+        
+        vector<int> list;
+        
+        int n = matrix[queries[i][0] + 1][queries[i][1]];
+        
+        list.push_back(matrix[queries[i][0] + 1][queries[i][1]]);
+        
+        //오른쪽
+        for(int a = queries[i][1]; a <= queries[i][3]; a++){
+            
+            list.push_back(matrix[queries[i][0]][a]);
+            
+            if(matrix[queries[i][0]][a] < n){
+                
+                n = matrix[queries[i][0]][a];
+                
+            }
+            
+        }
+        
+        //아래쪽
+        for(int a = queries[i][0] + 1; a <= queries[i][2]; a++){
+            
+            list.push_back(matrix[a][queries[i][3]]);
+            
+            if(matrix[a][queries[i][3]] < n){
+                
+                n = matrix[a][queries[i][3]];
+                
+            }
+            
+        }
+        
+        //왼쪽
+        for(int a = queries[i][3] - 1; a >= queries[i][1]; a--){
+            
+            list.push_back(matrix[queries[i][2]][a]);
+            
+            if(matrix[queries[i][2]][a] < n){
+                
+                n = matrix[queries[i][2]][a];
+                
+            }
+            
+        }
+        
+        //위쪽
+        for(int a = queries[i][2] - 1; a > queries[i][0] - 1; a--){
+            
+            list.push_back(matrix[a][queries[i][1]]);
+            
+            if(matrix[a][queries[i][1]] < n){
+                
+                n = matrix[a][queries[i][1]];
+                
+            }
+            
+        }
+        
+        //회전
+        //오른쪽
+        for(int a = queries[i][1]; a <= queries[i][3]; a++){
+            
+            matrix[queries[i][0]][a] = list[0];
+            list.erase(list.begin());
+            
+        }
+        
+        //아래쪽
+        for(int a = queries[i][0] + 1; a <= queries[i][2]; a++){
+            
+            matrix[a][queries[i][3]] = list[0];
+            list.erase(list.begin());
+            
+        }
+        
+        //왼쪽
+        for(int a = queries[i][3] - 1; a >= queries[i][1]; a--){
+            
+            matrix[queries[i][2]][a] = list[0];
+            list.erase(list.begin());
+            
+        }
+        
+        //위쪽
+        for(int a = queries[i][2] - 1; a > queries[i][0]; a--){
+            
+            matrix[a][queries[i][1]] = list[0];
+            list.erase(list.begin());
+            
+        }
+                         
+        answer.push_back(n);
+        
+    }
+        
+    return answer;
+}
